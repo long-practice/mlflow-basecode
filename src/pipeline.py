@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from preprocessing.preprocess import Preprocess
-from model_tuning.XGBoost_tuning import
+from utils.model_tuning import Objective
 
 class Pipeline():
     def __init__(self, train_data, test_data):
@@ -38,7 +38,5 @@ class Pipeline():
 
     def run(self):
         self.preprocess()
-        self.model_tuning('XGBoost')
-
 
         self.model = self.get_model()
