@@ -2,6 +2,10 @@
 
 ```
 project-root/
+├── model_tuning/
+│   ├── XGBoost_tuning.ipynb
+│   ├── LightGBM_tuning.ipynb
+│   └── CatBoost_tuning.ipynb
 ├── src/
 │   ├── pipeline.py
 │   ├── modeling.py
