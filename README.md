@@ -2,13 +2,17 @@
 
 ```
 project-root/
+├── data/
+│   ├── TRN.csv
+│   └── test.csv
 ├── model_tuning/
-│   ├── XGBoost_tuning.ipynb
-│   ├── LightGBM_tuning.ipynb
-│   └── CatBoost_tuning.ipynb
+│   ├── XGBoost_tuning.py
+│   ├── LightGBM_tuning.py
+│   └── CatBoost_tuning.py
 ├── notebook/
 │   ├── EDA_1.ipynb
-│   └── EDA_n.ipynb
+│   ├── EDA_n.ipynb
+│   └── predict.ipynb
 ├── preprocessing/
 │   └── preprocess.py
 ├── src/
