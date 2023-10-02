@@ -2,24 +2,27 @@
 
 ```
 project-root/
+├── artifact/
+│   ├── LGBM_model.pkl
+│   └── XGB_model.pkl
 ├── data/
 │   ├── TRN.csv
 │   └── test.csv
-├── model_tuning/
-│   ├── XGBoost_tuning.py
-│   ├── LightGBM_tuning.py
-│   └── CatBoost_tuning.py
 ├── notebook/
 │   ├── EDA_1.ipynb
 │   ├── EDA_n.ipynb
 │   └── predict.ipynb
 ├── preprocessing/
 │   └── preprocess.py
+├── prediction/
+│   └── submission.csv
 ├── src/
 │   ├── pipeline.py
-│   ├── modeling.py
 │   └── styles/
 │       └── notebook_style.css
+├── utils/
+│   ├── logging.csv
+│   └── model_tuning.py
 ├── docs/
 │   └── README.md
 └── LICENSE.txt
