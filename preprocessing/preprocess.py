@@ -8,7 +8,7 @@ class Preprocess():
         self.test = test_df
         self.eps = 1e-6
 
-    def set_missing_value(self):
+    def set_missing_value(self, df):
         print('Preprocessing Set Missing Value')
         pass
 
@@ -26,7 +26,7 @@ class Preprocess():
             df[new_col] = df[col1] / (df[col2] + self.eps)
 
             # FlyAshComponent : FlyAshComponent가 0, 0 아니면 1 (정수형)
-            new_col, col = 'FlyAshComponent', 'FlyAshComponent_YN'
+            new_col, col = 'FlyAshComponent_YN', 'FlyAshComponent'
             df[new_col] = np.where(df[col] == 0.0, 0, 1).astype('int64')
 
     def remove_outlier(self, df):
