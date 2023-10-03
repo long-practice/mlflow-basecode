@@ -15,12 +15,14 @@ def get_current_time():
     return date_time
 
 
-def set_logger(name):
-    logging.basicConfig(level='NOTSET')
-    logger = logging.getLogger(name)
+def set_logger(log_file_name):
+    logger = logging.getLogger(log_file_name)
+    logger.setLevel(logging.INFO)
 
     curr_time = get_current_time()
-    log_file_path = os.path.join(LOG_PATH, name, curr_time, LOG_EXT)
+    log_file = log_file_name + curr_time + LOG_EXT
+    log_file_path = os.path.join(LOG_PATH, log_file)
+
     file_handler = logging.FileHandler(log_file_path, mode='a', encoding='utf-8')
     file_handler.setFormatter(logging.Formatter(FILE_HANDLER_FORMAT))
     logger.addHandler(file_handler)
