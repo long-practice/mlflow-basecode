@@ -1,11 +1,12 @@
 import os
 import pickle
+import logging
 
 import optuna
 
 
 class Objective():
-    def __init__(self, model, params, X_train, X_test, y_train, y_test, error_function, direction, n_trials):
+    def __init__(self, model, params, X_train, X_test, y_train, y_test, error_function, direction, n_trials, logger):
         self.model = model
 
         self.X_train = X_train
@@ -17,6 +18,23 @@ class Objective():
         self.error = error_function
         self.direction = direction
         self.n_trials = n_trials
+
+        self.logger = logger
+        optuna.logging.enable_default_handler()
+        optuna.logging.set_verbosity(optuna.logging.INFO)
+        optuna.logging.enable_propagation()
+
+    # def set_optuna_logger(self):
+    #     optuna.logging.enable_propagation()
+    #     optuna.logging.disable_default_handler()
+
+    #     log_file_path = get_logger_path(self.logger)
+    #     optuna_log_file_handler = logging.FileHandler(log_file_path)
+    #     optuna_log_file_handler.setFormatter(optuna.logging.create_default_formatter())
+    #     optuna.logging.get_logger('Optuna').addHandler(optuna_log_file_handler)
+    #     optuna.logging.set_verbosity(optuna.logging.DEBUG)
+
+    #     print(log_file_path)
 
     def __call__(self, trial):
         self.params =  {
@@ -38,13 +56,14 @@ class Objective():
         return err
 
     def study(self):
+        self.logger.info('Start Optimization')
         study = optuna.create_study(direction=self.direction)
         study.optimize(self, n_trials=self.n_trials)
 
         best_params = study.best_params
         self.model.set_params(**best_params)
 
+        self.logger.info('Save Model')
         model_name = 'XGB_model'
         with open(f'./artifact/{model_name}.pkl', 'wb') as f:
             pickle.dump(self.model, f)
-

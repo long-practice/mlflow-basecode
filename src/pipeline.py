@@ -9,12 +9,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from preprocessing.preprocess import Preprocess
 from utils.model_tuning import Objective
+from utils.logger import set_logger
 
 class Pipeline():
     def __init__(self, train_data, test_data):
         self.train = train_data
         self.test = test_data
         self.model = None
+        self.logger = set_logger('Model_Tuning')
 
         # self.valid_regressor_models = ['XGBoost', 'LightGBM', 'CatBoost', 'Linear Regression', 'Random Forest']
         # self.valid_classifier_models = ['XGBoost', 'LightGBM', 'CatBoost', 'Logistic Regression', 'Random Forest']
@@ -36,12 +38,13 @@ class Pipeline():
         #     return None
 
         if model_name == 'XGBoost':
+            self.logger.info('Start XGBoost Model Hyperparameter Tuning')
             xgb_mdl = XGBRegressor()
             X, y = self.train.drop('Strength', axis=1), self.train['Strength']
             X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
             print(X_train.shape, y_train.shape, X_valid.shape, y_valid.shape)
             err_func = lambda y_true, y_pred: mean_squared_error(y_true, y_pred, squared=False)
-            xgb_obj = Objective(xgb_mdl, None, X_train, X_valid, y_train, y_valid, err_func, 'minimize', 10)
+            xgb_obj = Objective(xgb_mdl, None, X_train, X_valid, y_train, y_valid, err_func, 'minimize', 10, self.logger)
             xgb_obj.study()
 
 

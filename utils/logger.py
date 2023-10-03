@@ -20,7 +20,7 @@ def set_logger(log_file_name):
     logger.setLevel(logging.INFO)
 
     curr_time = get_current_time()
-    log_file = log_file_name + curr_time + LOG_EXT
+    log_file = log_file_name + '_' + curr_time + LOG_EXT
     log_file_path = os.path.join(LOG_PATH, log_file)
 
     file_handler = logging.FileHandler(log_file_path, mode='a', encoding='utf-8')
@@ -28,3 +28,15 @@ def set_logger(log_file_name):
     logger.addHandler(file_handler)
 
     return logger
+
+
+def get_logger_path(logger):
+    log_file_path = None
+    for handler in logger.handlers:
+        if isinstance(handler, logging.FileHandler):
+            log_file_path = handler.baseFilename
+            break
+    else:
+        log_file_path = 'Invalid Path'
+
+    return log_file_path
