@@ -18,9 +18,6 @@ class Pipeline():
         self.model = None
         self.logger = set_logger('Model_Tuning')
 
-        # self.valid_regressor_models = ['XGBoost', 'LightGBM', 'CatBoost', 'Linear Regression', 'Random Forest']
-        # self.valid_classifier_models = ['XGBoost', 'LightGBM', 'CatBoost', 'Logistic Regression', 'Random Forest']
-
     def preprocess(self):
         self.preprocess = Preprocess(self.train, self.test)
         self.preprocess.do_preprocess()

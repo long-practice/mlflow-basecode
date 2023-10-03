@@ -1,52 +1,62 @@
-import os
-import pickle
+import datetime
 
 import numpy as np
 import pandas as pd
-from xgboost import XGBRegressor, XGBClassifier
 
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-from preprocessing.preprocess import Preprocess
-from utils.model_tuning import Objective
 from utils.logger import set_logger
 
-class Pipeline():
-    def __init__(self, train_data, test_data):
-        self.train = train_data
-        self.test = test_data
-        self.model = None
-        self.logger = set_logger('Model_Tuning')
+class Preprocess():
+    def __init__(self, train_df, test_df):
+        self.train = train_df
+        self.test = test_df
 
-    def preprocess(self):
-        self.preprocess = Preprocess(self.train, self.test)
-        self.preprocess.do_preprocess()
+        self.logger = set_logger('preprocess')
+        self.eps = 1e-6
 
-    def get_model(self):
-        mdl = None
-        with open('.....', 'rb') as f:
-            mdl = pickle.load(f)
-        return mdl
+    def set_missing_value(self, df):
+        self.logger.info('Preprocessing Set Missing Value')
+        pass
 
-    def model_tuning(self, model_name):
-        # if model_name not in self.valid_regressor_models:
-        #     print(f'{model_name} is not included in {self.valid_models}')
-        #     print('Check the working category (Regression or Classification)')
-        #     return None
+    def add_feature(self, df, category):
+        self.logger.info('Preprocessing Add Feature')
+        if (category == 'train') or (category == 'test'):
+            # lnAgeInDays : AgeInDays 로그
+            new_col, col = 'lnAgeInDays', 'AgeInDays'
+            df[new_col] = np.log(df[col] + 1)
+            if np.sum(df[new_col].isna()):
+                self.logger.info(f'Invalid LogTransform {new_col} in train')
 
-        if model_name == 'XGBoost':
-            self.logger.info('Start XGBoost Model Hyperparameter Tuning')
-            xgb_mdl = XGBRegressor()
-            X, y = self.train.drop('Strength', axis=1), self.train['Strength']
-            X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
-            print(X_train.shape, y_train.shape, X_valid.shape, y_valid.shape)
-            err_func = lambda y_true, y_pred: mean_squared_error(y_true, y_pred, squared=False)
-            xgb_obj = Objective(xgb_mdl, None, X_train, X_valid, y_train, y_valid, err_func, 'minimize', 10, self.logger)
-            xgb_obj.study()
+            # CementToWaterRatio : CementComponent / WaterComponent
+            new_col, col1, col2 = 'CementToWaterRatio', 'CementComponent', 'WaterComponent'
+            df[new_col] = df[col1] / (df[col2] + self.eps)
 
+            # FlyAshComponent : FlyAshComponent가 0, 0 아니면 1 (정수형)
+            new_col, col = 'FlyAshComponent_YN', 'FlyAshComponent'
+            df[new_col] = np.where(df[col] == 0.0, 0, 1).astype('int64')
 
-    def run(self):
-        self.preprocess()
-        self.model_tuning('XGBoost')
+    def remove_outlier(self, df):
+        self.logger.info('Preprocessing Remove Outlier')
+        cols = df.select_dtypes([np.int64, np.float64]).columns.values.tolist()
+        factor = 1.5
+        for col in cols:
+            self.logger.info(f"column name is : {col}")
+            Q1 = df[col].quantile(0.25)
+            Q3 = df[col].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - (factor * IQR)
+            upper_bound = Q3 + (factor * IQR)
+            self.logger.info(f"lower_bound is : {lower_bound}")
+            self.logger.info(f"upper_bound is : {upper_bound}")
+            df[col] = np.where(df[col] > upper_bound, upper_bound, df[col])
+            df[col] = np.where(df[col] < lower_bound, lower_bound, df[col])
+            self.logger.info('-' * 40)
 
-        # self.model = self.get_model()
+    def do_preprocess(self):
+        self.set_missing_value(self.train)
+        self.set_missing_value(self.test)
+
+        self.remove_outlier(self.train)
+        self.remove_outlier(self.test)
+
+        self.add_feature(self.train, 'train')
+        self.add_feature(self.test, 'test')
