@@ -3,9 +3,8 @@ from datetime import datetime
 import logging
 import logging.handlers
 
-
 LOG_PATH = './logs/'
-LOG_EXT = 'log'
+LOG_EXT = '.log'
 FILE_HANDLER_FORMAT = '[%(asctime)s][%(levelname)s]: %(message)s'
 
 
@@ -13,6 +12,11 @@ def get_current_time():
     today = datetime.now()
     date_time = today.strftime("%Y%m%d_%H%M%S")
     return date_time
+
+
+def remove_handler(logger):
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
 
 
 def set_logger(log_file_name):
@@ -23,6 +27,7 @@ def set_logger(log_file_name):
     log_file = log_file_name + '_' + curr_time + LOG_EXT
     log_file_path = os.path.join(LOG_PATH, log_file)
 
+    remove_handler(logger)
     file_handler = logging.FileHandler(log_file_path, mode='a', encoding='utf-8')
     file_handler.setFormatter(logging.Formatter(FILE_HANDLER_FORMAT))
     logger.addHandler(file_handler)

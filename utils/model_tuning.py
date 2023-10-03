@@ -3,6 +3,7 @@ import pickle
 import logging
 
 import optuna
+from utils.logger import get_logger_path
 
 
 class Objective():
@@ -20,21 +21,16 @@ class Objective():
         self.n_trials = n_trials
 
         self.logger = logger
+        self.logger.setLevel(logging.INFO)
+
+        log_path = get_logger_path(self.logger)
+
         optuna.logging.enable_default_handler()
+        optuna_log_file_handler = logging.FileHandler(log_path)
+        optuna_log_file_handler.setFormatter(optuna.logging.create_default_formatter())
+        optuna.logging.get_logger('optuna').addHandler(optuna_log_file_handler)
         optuna.logging.set_verbosity(optuna.logging.INFO)
-        optuna.logging.enable_propagation()
 
-    # def set_optuna_logger(self):
-    #     optuna.logging.enable_propagation()
-    #     optuna.logging.disable_default_handler()
-
-    #     log_file_path = get_logger_path(self.logger)
-    #     optuna_log_file_handler = logging.FileHandler(log_file_path)
-    #     optuna_log_file_handler.setFormatter(optuna.logging.create_default_formatter())
-    #     optuna.logging.get_logger('Optuna').addHandler(optuna_log_file_handler)
-    #     optuna.logging.set_verbosity(optuna.logging.DEBUG)
-
-    #     print(log_file_path)
 
     def __call__(self, trial):
         self.params =  {
