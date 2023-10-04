@@ -27,3 +27,7 @@ project-root/
 │   └── README.md
 └── LICENSE.txt
 ```
+
+## Test
+1. `/mlflow-basecode/notebook/guide`
+2. 
