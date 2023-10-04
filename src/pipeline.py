@@ -11,6 +11,7 @@ from preprocessing.preprocess import Preprocess
 from utils.model_tuning import Objective
 from utils.logger import set_logger
 
+
 class Pipeline():
     def __init__(self, train_data, test_data):
         self.train = train_data
@@ -41,7 +42,7 @@ class Pipeline():
             X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
             print(X_train.shape, y_train.shape, X_valid.shape, y_valid.shape)
             err_func = lambda y_true, y_pred: mean_squared_error(y_true, y_pred, squared=False)
-            xgb_obj = Objective(xgb_mdl, None, X_train, X_valid, y_train, y_valid, err_func, 'minimize', 10, self.logger)
+            xgb_obj = Objective(xgb_mdl, model_name, X_train, X_valid, y_train, y_valid, err_func, 'minimize', 10, self.logger)
             xgb_obj.study()
 
 

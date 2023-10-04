@@ -4,11 +4,13 @@ import logging
 
 import optuna
 from utils.logger import get_logger_path
+from utils.parameter import *
 
 
 class Objective():
-    def __init__(self, model, params, X_train, X_test, y_train, y_test, error_function, direction, n_trials, logger):
+    def __init__(self, model, model_name, X_train, X_test, y_train, y_test, error_function, direction, n_trials, logger):
         self.model = model
+        self.model_name = model_name
 
         self.X_train = X_train
         self.y_train = y_train
@@ -31,19 +33,33 @@ class Objective():
         optuna.logging.get_logger('optuna').addHandler(optuna_log_file_handler)
         optuna.logging.set_verbosity(optuna.logging.INFO)
 
+    def get_params(self, trial):
+        util_params = {}
+        if self.model_name == 'XGBoost':
+            util_params = xgb_params_from_utils
+        elif self.model_name == 'LightGBM':
+            util_params = lgbm_params_from_utils
+        else:
+            print('Implementing')
+            pass
+
+        params = {}
+        for parameter, val_list in util_params.items():
+            _type = val_list.pop()
+            if _type == 'categorical':
+                params[parameter] = trial.suggest_categorical(parameter, val_list[:])
+            elif _type == 'int':
+                params[parameter] = trial.suggest_int(parameter, val_list[0], val_list[-1])
+            elif _type == 'float':
+                params[parameter] = trial.suggest_float(parameter, val_list[0], val_list[-1])
+            else:
+                print('No params from utils.parameter.py')
+
+        return params
 
     def __call__(self, trial):
-        self.params =  {
-            'max_depth': trial.suggest_int('max_depth', 1, 20),
-            'learning_rate': trial.suggest_float('learning_rate', 0.001, 1.0),
-            'n_estimators': trial.suggest_int('n_estimators', 500, 1000),
-            'min_child_weight': trial.suggest_int('min_child_weight', 1, 10),
-            'gamma': trial.suggest_float('gamma', 0.01, 1.0),
-            'subsample': trial.suggest_float('subsample', 0.01, 1.0),
-            'colsample_bytree': trial.suggest_float('colsample_bytree', 0.01, 1.0),
-            'reg_alpha': trial.suggest_float('reg_alpha', 0.01, 1.0),
-            'reg_lambda': trial.suggest_float('reg_lambda', 0.01, 1.0),
-        }
+        self.params = self.get_params(trial)
+
         self.model.set_params(**self.params)
         self.model.fit(self.X_train, self.y_train)
         y_pred = self.model.predict(self.X_test)
