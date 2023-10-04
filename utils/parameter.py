@@ -11,5 +11,5 @@ xgb_params_from_utils = {
 }
 
 lgbm_params_from_utils = {
-
+    'random_state': [42, 42, 'int']
 }

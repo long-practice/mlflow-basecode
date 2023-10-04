@@ -4,13 +4,14 @@ import logging
 
 import optuna
 from utils.logger import get_logger_path
-from utils.parameter import *
+from utils.parameter import xgb_params_from_utils, lgbm_params_from_utils
 
 
 class Objective():
     def __init__(self, model, model_name, X_train, X_test, y_train, y_test, error_function, direction, n_trials, logger):
         self.model = model
         self.model_name = model_name
+        self.params = {}
 
         self.X_train = X_train
         self.y_train = y_train
@@ -36,22 +37,22 @@ class Objective():
     def get_params(self, trial):
         util_params = {}
         if self.model_name == 'XGBoost':
-            util_params = xgb_params_from_utils
+            util_params = xgb_params_from_utils.copy()
         elif self.model_name == 'LightGBM':
-            util_params = lgbm_params_from_utils
+            util_params = lgbm_params_from_utils.copy()
         else:
             print('Implementing')
             pass
 
         params = {}
         for parameter, val_list in util_params.items():
-            _type = val_list.pop()
+            _type = val_list[-1]
             if _type == 'categorical':
                 params[parameter] = trial.suggest_categorical(parameter, val_list[:])
             elif _type == 'int':
-                params[parameter] = trial.suggest_int(parameter, val_list[0], val_list[-1])
+                params[parameter] = trial.suggest_int(parameter, val_list[0], val_list[1])
             elif _type == 'float':
-                params[parameter] = trial.suggest_float(parameter, val_list[0], val_list[-1])
+                params[parameter] = trial.suggest_float(parameter, val_list[0], val_list[1])
             else:
                 print('No params from utils.parameter.py')
 
