@@ -29,9 +29,10 @@ class Objective():
         log_path = get_logger_path(self.logger)
 
         optuna.logging.enable_default_handler()
-        optuna_log_file_handler = logging.FileHandler(log_path)
-        optuna_log_file_handler.setFormatter(optuna.logging.create_default_formatter())
-        optuna.logging.get_logger('optuna').addHandler(optuna_log_file_handler)
+        if not optuna.logging.get_logger('optuna').handlers:
+            optuna_log_file_handler = logging.FileHandler(log_path)
+            optuna_log_file_handler.setFormatter(optuna.logging.create_default_formatter())
+            optuna.logging.get_logger('optuna').addHandler(optuna_log_file_handler)
         optuna.logging.set_verbosity(optuna.logging.INFO)
 
     def get_params(self, trial):
