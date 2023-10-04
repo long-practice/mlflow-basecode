@@ -48,7 +48,7 @@ class Objective():
         for parameter, val_list in util_params.items():
             _type = val_list[-1]
             if _type == 'categorical':
-                params[parameter] = trial.suggest_categorical(parameter, val_list[:])
+                params[parameter] = trial.suggest_categorical(parameter, val_list[:-1])
             elif _type == 'int':
                 params[parameter] = trial.suggest_int(parameter, val_list[0], val_list[1])
             elif _type == 'float':
@@ -77,6 +77,5 @@ class Objective():
         self.model.set_params(**best_params)
 
         self.logger.info('Save Model')
-        model_name = 'XGB_model'
-        with open(f'./artifact/{model_name}.pkl', 'wb') as f:
+        with open(f'./artifact/{self.model_name}.pkl', 'wb') as f:
             pickle.dump(self.model, f)
