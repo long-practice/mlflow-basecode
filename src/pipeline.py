@@ -35,11 +35,6 @@ class Pipeline:
         return mdl
 
     def model_tuning(self, model_name):
-        # if model_name not in self.valid_regressor_models:
-        #     print(f'{model_name} is not included in {self.valid_models}')
-        #     print('Check the working category (Regression or Classification)')
-        #     return None
-
         if model_name == "XGBoost":
             self.logger.info("Start XGBoost Model Hyperparameter Tuning")
             xgb_mdl = XGBRegressor()
@@ -93,4 +88,3 @@ class Pipeline:
         self.model_tuning("XGBoost")
         self.model_tuning("LightGBM")
 
-        # self.model = self.get_model()

@@ -1,7 +1,9 @@
 import os
 
 import pandas as pd
+import mlflow
 from src.pipeline import Pipeline
+
 
 if __name__ == '__main__':
     train_data = pd.read_csv('./data/train.csv')

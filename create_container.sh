@@ -15,4 +15,8 @@ docker run --name $CONTAINER_NAME   \
     -v $LOG_DIR:/work/logs/   \
     -v $DATA_DIR:/work/data/   \
     -v $PREDICTION_DIR:/work/prediction/   \
+    -p 5000:5000 \
     --rm -it $TARGET_DOCKER_IMAGE:latest /bin/bash
+
+## how to enter the mlflow command in Docker
+## mlflow server -h 0.0.0.0

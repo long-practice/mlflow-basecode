@@ -12,7 +12,7 @@ xgb_params_from_utils = {
 
 lgbm_params_from_utils = {
     "verbosity": [-1, -1, "int"],
-    "boosting_type": ["gbdt", "categorical"],
+    # "boosting_type": ["gbdt", "categorical"],
     "max_depth": [3, 10, "int"],
     "num_leaves": [10, 500, "int"],
     "min_child_samples": [5, 100, "int"],
