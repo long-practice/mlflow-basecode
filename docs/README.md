@@ -41,11 +41,11 @@ project-root/
 ```
 
 ## How To Make Submission(for kaggle)
-1. 전처리 파이프라인 구성: `preprocessing/preprocess.py`에서 구현
-2. 모델 파이프라인 구성: `src/pipeline.py`에서 구현
-3. `optuna`라이브러리 이용 하이퍼파라미터 튜닝, `utils.parameter.py`에서 각 모델, 변수별 타입, lower bound, upper bound 지정
+1. 전처리 파이프라인 구성: `preprocessing/preprocess.py`에서 구현([참고](https://github.com/long-practice/mlflow-basecode/blob/main/docs/How_to_construct_the_preprocessing_pipeline.md))
+2. 모델 파이프라인 구성: `src/pipeline.py`에서 구현([참고](https://github.com/long-practice/mlflow-basecode/blob/main/docs/How_to_construct_the_model_pipeline.md))
+3. `optuna`라이브러리 이용 하이퍼파라미터 튜닝, `utils.parameter.py`에서 각 모델, 변수별 타입, lower bound, upper bound 지정([참고](https://github.com/long-practice/mlflow-basecode/blob/main/docs/How_to_do_hyperparameter_tuning.md))
 4. `log`파일에서 튜닝과정 확인, `artifacts`에 원하는 모델이 있는지 확인
-5. 최종적으로 노트북에서 추가 작업 진행(앙상블, 제출)
+5. 최종적으로 노트북에서 추가 작업 진행(앙상블, submission 생성 및 다운로드)
 
 ## How To Use MLflow
 1. 전처리, 모델 파이프라인 수정
