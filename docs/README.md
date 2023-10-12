@@ -49,11 +49,40 @@ project-root/
 
 ## How To Use MLflow
 1. 전처리, 모델 파이프라인 수정
-2. 모델 하이퍼 파라미터 튜닝 간 필요 패키지 명시(`./requirements.txt`)
-3. 도커 이미지 생성(`./docker/build_docker_image.sh`)
-4. 도커 컨테이너 진입(`./create_container.sh`)
-5. 메인 파일 실행 (`./main.py`)
-6. mlflow ui 띄우기 (`mlflow server -h 0.0.0.0`)
+2. 모델 하이퍼 파라미터 튜닝 간 필요 패키지, 버전을 명시(`./requirements.txt` 수정)<br>
+   해당 패키지들은 도커 컨테이너에서 파이프라인 실행하기 직전에 다운로드 받을 예정
+   
+   ![image](https://github.com/long-practice/mlflow-basecode/assets/83870423/8d52748d-37ba-4ed5-8440-455228440b1a)
+
+3. Docker 이미지 생성
+   ```
+   /bin/bash ./docker/build_docker_image.sh
+   ```
+   Docker 이미지 확인
+   ```
+   docker images
+   ```
+   Docker 이미지 삭제
+   ```
+   docker rmi [IMAGE ID]
+   ```
+
+   ![image](https://github.com/long-practice/mlflow-basecode/assets/83870423/ffff3ed6-8284-4790-9ac5-69c3c833a363)
+
+4. Docker 컨테이너 진입(상호 작용모드로 bash쉘 이용)
+   ```
+   /bin/bash ./create_container.sh
+   ```
+   
+5. Docker 컨테이너 내부에서 메인 파일 실행 (필요 시 `nohup` 및 백그라운드 실행)
+   ```
+   /bin/bash ./run_main.sh
+   ```
+   
+6. Docker 컨테이너 내부에서 mlflow ui 띄우기 (하이퍼 파라미터 튜닝 종료 후 실행)
+   ```
+   mlflow server -h 0.0.0.0
+   ```
 7. 로컬에서 웹으로 접속(`https://localhost:5000`)
 8. 결과 확인
 
