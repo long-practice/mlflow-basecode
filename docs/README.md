@@ -69,7 +69,8 @@ project-root/
 
    ![image](https://github.com/long-practice/mlflow-basecode/assets/83870423/ffff3ed6-8284-4790-9ac5-69c3c833a363)
 
-4. Docker 컨테이너 진입(상호 작용모드로 bash쉘 이용)
+4. Docker 컨테이너 진입(상호 작용모드로 bash쉘 이용)<br>
+   컨테이너 진입 전 산출물 경로 지정(반드시 절대경로로 명시)
    ```
    /bin/bash ./create_container.sh
    ```
