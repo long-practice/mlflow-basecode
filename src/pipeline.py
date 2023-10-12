@@ -28,12 +28,6 @@ class Pipeline:
         self.preprocess = Preprocess(self.train, self.test)
         self.preprocess.do_preprocess()
 
-    def get_model(self):
-        mdl = None
-        with open(".....", "rb") as f:
-            mdl = pickle.load(f)
-        return mdl
-
     def model_tuning(self, model_name):
         if model_name == "XGBoost":
             self.logger.info("Start XGBoost Model Hyperparameter Tuning")

@@ -1,14 +1,12 @@
-import os
-
 import pandas as pd
-import mlflow
 from src.pipeline import Pipeline
 
 
 if __name__ == '__main__':
     train_data = pd.read_csv('./data/train.csv')
     test_data = pd.read_csv('./data/test.csv')
-    n_trial = 10
+
+    n_trial = 100
     test_size = 0.2
 
     main_Pipeline = Pipeline(
