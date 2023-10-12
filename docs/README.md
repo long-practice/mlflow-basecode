@@ -85,4 +85,6 @@ project-root/
    ```
 7. 로컬에서 웹으로 접속(`https://localhost:5000`)
 8. 결과 확인
-
+  - experiment 선택해서 각각의 run기록을 보거나 특정 run기록을 선택하여 하이퍼 파라미터 간 비교 가능(compare)
+  - mlflow 서버 실행 정지: `ctrl + c`
+  - 결과 확인 후 Docker 컨테이너 빠져나오기(Docker 컨테이너를 빠져나오면 컨테이너 자동 삭제): `exit`
