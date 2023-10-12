@@ -14,7 +14,7 @@ from utils.model_tuning import Objective
 
 
 class Pipeline:
-    def __init__(self, train_data, test_data, n_trial, test_size):
+    def __init__(self, train_data, test_data, n_trial, test_size, use_mlflow):
         self.train = train_data
         self.test = test_data
 
@@ -23,6 +23,7 @@ class Pipeline:
 
         self.model = None
         self.logger = set_logger("Model_Tuning")
+        self.use_mlflow = use_mlflow
 
     def preprocess(self):
         self.preprocess = Preprocess(self.train, self.test)
@@ -50,6 +51,7 @@ class Pipeline:
                 "minimize",
                 self.n_trial,
                 self.logger,
+                self.use_mlflow
             )
             xgb_obj.study()
 
@@ -74,6 +76,7 @@ class Pipeline:
                 "minimize",
                 self.n_trial,
                 self.logger,
+                self.use_mlflow
             )
             lgbm_obj.study()
 

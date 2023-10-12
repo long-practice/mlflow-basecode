@@ -22,6 +22,7 @@ class Objective:
         direction,
         n_trials,
         logger,
+        use_mlflow
     ):
         self.model = model
         self.model_name = model_name
@@ -40,6 +41,8 @@ class Objective:
         self.logger = logger
         self.logger.setLevel(logging.INFO)
         self.n_trial = 0
+
+        self.use_mlflow = use_mlflow
 
         log_path = get_logger_path(self.logger)
 
@@ -84,10 +87,12 @@ class Objective:
         return params
 
     def __call__(self, trial):
-        mlflow.set_experiment(self.experiment_name)
+        if self.use_mlflow:
+            mlflow.set_experiment(self.experiment_name)
 
-        run_name = '_'.join(self.experiment_name.split()) + f'_run_{self.n_trial}'
-        mlflow.start_run(run_name=run_name)
+            run_name = '_'.join(self.experiment_name.split()) + f'_run_{self.n_trial}'
+            mlflow.start_run(run_name=run_name)
+
         self.params = self.get_params(trial)
 
         self.model.set_params(**self.params)
@@ -96,9 +101,10 @@ class Objective:
 
         err = self.error(self.y_test, y_pred)
 
-        mlflow.log_params(self.params)
-        mlflow.log_metrics({'metric': err})
-        mlflow.end_run()
+        if self.use_mlflow:
+            mlflow.log_params(self.params)
+            mlflow.log_metrics({'metric': err})
+            mlflow.end_run()
 
         self.n_trial += 1
 
@@ -106,8 +112,11 @@ class Objective:
 
     def study(self):
         self.logger.info("Start Optimization")
-        self.experiment_name = f'{self.model_name} Model Tuning'
-        mlflow.create_experiment(self.experiment_name)
+
+        if self.use_mlflow:
+            self.experiment_name = f'{self.model_name} Model Tuning'
+            mlflow.create_experiment(self.experiment_name)
+
         study = optuna.create_study(direction=self.direction)
         study.optimize(self, n_trials=self.n_trials)
 
