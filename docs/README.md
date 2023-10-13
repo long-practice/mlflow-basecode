@@ -70,22 +70,29 @@ project-root/
    ![image](https://github.com/long-practice/mlflow-basecode/assets/83870423/ffff3ed6-8284-4790-9ac5-69c3c833a363)
 
 4. Docker 컨테이너 진입(상호 작용모드로 bash쉘 이용)<br>
-   컨테이너 진입 전 산출물 경로 지정(반드시 절대경로로 명시)
+   컨테이너 진입 전 산출물 경로 지정(반드시 절대경로로 명시)<br>
+   반드시 `create_container.sh`에서 수정
+   ```
+   ARTIFACT_DIR=/.../mlflow-basecode/artifact/
+   LOG_DIR=/Users/.../mlflow-basecode/logs/
+   DATA_DIR=/.../mlflow-basecode/data/
+   PREDICTION_DIR=/.../mlflow-basecode/prediction/
+   ```
    ```
    /bin/bash ./create_container.sh
    ```
    
-5. Docker 컨테이너 내부에서 메인 파일 실행 (필요 시 `nohup` 및 백그라운드 실행)
+6. Docker 컨테이너 내부에서 메인 파일 실행 (필요 시 `nohup` 및 백그라운드 실행)
    ```
    /bin/bash ./run_main.sh
    ```
    
-6. Docker 컨테이너 내부에서 mlflow ui 띄우기 (하이퍼 파라미터 튜닝 종료 후 실행)
+7. Docker 컨테이너 내부에서 mlflow ui 띄우기 (하이퍼 파라미터 튜닝 종료 후 실행)
    ```
    mlflow server -h 0.0.0.0
    ```
-7. 로컬에서 웹으로 접속(`https://localhost:5000`)
-8. 결과 확인
+8. 로컬에서 웹으로 접속(`https://localhost:5000`)
+9. 결과 확인
   - experiment 선택해서 각각의 run기록을 보거나 특정 run기록을 선택하여 하이퍼 파라미터 간 비교 가능(compare)
   - mlflow 서버 실행 정지: `ctrl + c`
   - 결과 확인 후 Docker 컨테이너 빠져나오기(Docker 컨테이너를 빠져나오면 컨테이너 자동 삭제): `exit`
